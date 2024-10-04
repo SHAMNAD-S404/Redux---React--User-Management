@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "ESNext", // or "ES6", ensures ESM output
+    "target": "ES2020", // or "ES6", suitable target for Node
+    "moduleResolution": "Node", // use Node-style module resolution
+    "esModuleInterop": true, // ensure compatibility with CommonJS
+    "skipLibCheck": true, // speed up type-checking
+    "strict": true, // enable strict type-checking
+    "outDir": "./dist", // compiled JavaScript ou  
+    "rootDir": "./src"  ,            // Skip type checking for libraries
+    "forceConsistentCasingInFileNames": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*"],                      // Include all TS files inside src
+  "exclude": ["node_modules"]                  // Exclude node_modules from compilation
+}
