@@ -5,6 +5,7 @@
     const app = express.Router();
 
     app.get('/' ,test) 
+       .post('')
 
 
 

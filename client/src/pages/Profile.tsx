@@ -1,9 +1,61 @@
     import { useSelector } from "react-redux"
-import { RootState } from "../redux/store"
+    import { RootState } from "../redux/store"
+    import { useEffect, useRef, useState } from "react"
+    import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
+    import { app } from "../firebase"
+
+
+    interface FormaData {
+      profilePicture?:string,
+      username?:string,
+      email?:string,
+      password?:string
+    }
     
     
     const Profile : React.FC = () : JSX.Element => {
+
+      const fileRef  = useRef<HTMLInputElement | null>(null)
+      const [image,setImage] = useState<File|undefined>(undefined)
+      const [imagePercent , setImagePercent] = useState<number>(0)
+      const [imageError , setImageError ] = useState<string|boolean>(false)
+      const [ formData , setFormData] = useState<FormaData>({})
+     
+       
       const {currentUser} = useSelector((state:RootState) => state.user)
+
+      useEffect(()=> {
+        if (image) {
+          handleFileUpload(image)
+        }
+      },[image])
+
+      const handleFileUpload = async (image: File) => {
+        const storage = getStorage(app);
+        const fileName = new Date().getTime() + image.name;
+        const storageRef = ref(storage, fileName);
+        const uploadTask = uploadBytesResumable(storageRef, image);
+      
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            // Progress handler
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setImagePercent(Math.round(progress));
+          },
+          (error: any) => {
+            // Error handler
+            setImageError(true);
+          },
+          () => {
+            // Success handler
+            getDownloadURL(uploadTask.snapshot.ref)
+              .then((downloadURL) => {
+                setFormData({ ...formData, profilePicture: downloadURL });
+              });
+          }
+        );
+      };
       return (
         <div className="p-3 max-w-lg mx-auto ">
           
@@ -13,9 +65,42 @@ import { RootState } from "../redux/store"
             </h1>
             <form className="flex flex-col gap-3">
 
-                <img src={currentUser?.profilePicture} 
+                <input
+                 type="file"
+                 ref={fileRef}
+                 hidden
+                 accept="image/*"
+                 onChange={(e)=> {
+                  if(e.target.files && e.target.files.length > 0){
+                    setImage(e.target.files[0])
+                  }
+                 }} />
+
+                <img 
+                  src={formData.profilePicture || currentUser?.profilePicture}
                 alt="user image"
-                className="w-32 h-32 mt-2 self-center object-cover rounded-full" />
+                className="w-32 h-32 mt-2 self-center object-cover rounded-full cursor-pointer" 
+                onClick={()=> fileRef.current?.click()}/>
+
+                <p className='text-sm self-center'>
+                  {imageError ? (
+                    <span className="text-red-600"
+                    >Error uploading image (file size must be less than 2 MB)
+                    </span>) :
+                    imagePercent > 0 && imagePercent < 100 ?
+                    (
+                      <span className="text-slate-700"
+                      >{`uploading: ${imagePercent}%`}
+                      </span>
+                    ) : imagePercent === 100 ?
+                    (
+                      <span className="text-green-700">
+                        Image uploded successfully
+                      </span>
+                    ) : ''
+                  }
+
+                </p>
 
                 <p 
                   className="ms-2 font-mono text-gray-400 "

@@ -3,6 +3,7 @@
 import express,{ Request,Response , NextFunction, ErrorRequestHandler } from 'express'
 import dotenv from 'dotenv'
 dotenv.config();
+import cookieParser from 'cookie-parser'
 import connectDB from './utility/db.ts';
 import userRoute from './routes/userRoutes/userRoute.ts'
 import authRoute from './routes/userRoutes/authRoute.ts'
@@ -14,6 +15,7 @@ import authRoute from './routes/userRoutes/authRoute.ts'
     connectDB();
 
     app.use(express.json())
+    app.use(cookieParser())
 
     //user route handling
     app.use('/api/user' ,userRoute)
