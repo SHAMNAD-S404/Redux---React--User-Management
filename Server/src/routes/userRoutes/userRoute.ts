@@ -1,14 +1,10 @@
-    
-    import express,{Request , Response} from 'express' ;
-    import {test} from '../../controllers/userController/userController.ts'
+import express from 'express';
+import { test } from '../../controllers/userController/userController.ts';
+import { verifyToken } from '../../utility/verifyUser.ts';
 
-    const app = express.Router();
+const router = express.Router();
 
-    app.get('/' ,test) 
-       .post('')
+router.get('/', test);
+router.post('/update/:id',);
 
-
-
-    export default app;
-
-
+export default router;

@@ -10,7 +10,9 @@
     "rootDir": "./src"  ,            // Skip type checking for libraries
     "forceConsistentCasingInFileNames": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true
+  
+    "noEmit": true,
+    
   },
   "include": ["src/**/*"],                      // Include all TS files inside src
   "exclude": ["node_modules"]                  // Exclude node_modules from compilation
