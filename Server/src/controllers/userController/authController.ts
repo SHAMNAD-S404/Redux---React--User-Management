@@ -132,3 +132,12 @@ export const google = async (
     next(errorHandler(500,'failed to authenticate with google'));
   }
 };
+
+export const signout = (req:Request,res:Response,next:NextFunction) => {
+
+  try {
+    res.clearCookie('access_token').status(200).json('Signout successfull')
+  } catch (error) {
+    next(errorHandler(500,'failed to signout'))
+  }
+}
