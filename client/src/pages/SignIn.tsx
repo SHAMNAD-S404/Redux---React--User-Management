@@ -36,7 +36,10 @@ const SignIn: React.FC = (): JSX.Element => {
       })
       const data = await res.json()
      
-      if (data.success === false) {
+      if (data.error) {
+
+        alert(data.error)
+          
           dispatch(signInFailure(data ))
           console.log(data);
           

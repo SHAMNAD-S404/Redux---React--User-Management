@@ -35,4 +35,4 @@ import PrivateRoute from './component/PrivateRoute'
     )
   }
   
-  export default App
+  export default App;

@@ -25,7 +25,7 @@ import cookieParser from 'cookie-parser';
     //error middleware
     const errorHandler:ErrorRequestHandler = ((err,req,res,next)  => {
 
-        const statusCode = err.statusCode || 500;
+        const statusCode = (err as any).statusCode || 500;
         const message    = err.message || "Internal server error";
         
         res.status(statusCode).json({
