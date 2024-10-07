@@ -5,6 +5,9 @@ import { signInStart , signInFailure ,signInSuccess } from "../redux/user/userSl
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import OAuth from "../component/OAuth";
+import {  ToastContainer , toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const SignIn: React.FC = (): JSX.Element => {
 
@@ -38,11 +41,22 @@ const SignIn: React.FC = (): JSX.Element => {
      
       if (data.error) {
 
-        alert(data.error)
+          toast.error(JSON.stringify(data.error),{
+            
+              position: "top-right", 
+              autoClose: 5000, 
+              hideProgressBar: false, 
+              closeOnClick: true, 
+              pauseOnHover: true, 
+              draggable: true, 
+              theme:"dark",
+            
+          });
+
+          navigate('/sign-in') 
+          dispatch(signInFailure(data.error ))
           
-          dispatch(signInFailure(data ))
           console.log(data);
-          
           return;        
       }
 
@@ -107,11 +121,15 @@ const SignIn: React.FC = (): JSX.Element => {
         </div>
       </div>
 
+      
+
       {/* Blue section */}
       <div
         className="hidden sm:flex bg-blue-500 h-full w-full lg:w-1/2 overflow-hidden rounded-r-3xl bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${bgImg})` }}
       >
+        <ToastContainer/>
+
         <div className="flex items-center justify-center h-full w-full bg-black bg-opacity-40">
           <h1 className="text-white font-semibold text-3xl shadow-2xl text-center">Login To <br />   Buy Games</h1>
         </div>

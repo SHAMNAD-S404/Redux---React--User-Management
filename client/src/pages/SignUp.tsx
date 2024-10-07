@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import bgImg from "../assets/new.jpg";
 import { useState } from "react";
 import OAuth from "../component/OAuth";
+import {  ToastContainer , toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp: React.FC = (): JSX.Element => {
   const navigate = useNavigate();
@@ -35,9 +37,29 @@ const SignUp: React.FC = (): JSX.Element => {
       setLoading(false);
       if (data.success === false) {
         setError(true);
+        toast.error(JSON.stringify(data),{
+
+          position: "top-right", 
+          autoClose: 5000, 
+          hideProgressBar: false, 
+          closeOnClick: true, 
+          pauseOnHover: true, 
+          draggable: true, 
+          theme:"dark"
+        });
+
         return;
       }
-      alert(JSON.stringify(data))
+
+      toast.success(JSON.stringify(data),{
+        position: "top-right", 
+              autoClose: 5000, 
+              hideProgressBar: false, 
+              closeOnClick: true, 
+              pauseOnHover: true, 
+              draggable: true, 
+              theme:"dark",
+      })
       navigate("/sign-in");
     } catch (error) {
       setLoading(false);
@@ -108,6 +130,8 @@ const SignUp: React.FC = (): JSX.Element => {
           </p>
         </div>
       </div>
+
+      <ToastContainer/>
 
       {/* Blue section */}
       <div
