@@ -48,6 +48,9 @@
           (error: any) => {
             // Error handler
             setImageError(true);
+            console.error(error 
+            );
+            
           },
           () => {
             // Success handler
