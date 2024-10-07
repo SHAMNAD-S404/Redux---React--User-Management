@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import express,{ Request, Response , NextFunction } from 'express';
 import User from "../../model/user.ts";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -6,7 +6,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import { errorHandler } from "../../utility/error.ts";
 
-const hashPassword = async (pass: string) => {
+       
+const hashPassword = async (pass: string) => {            //*TO HASH PASSWORD
   try {
     const passwordHash = bcrypt.hashSync(pass, 10);
     return passwordHash;
@@ -22,7 +23,6 @@ export const signup = async (
 ) => {
   try {
     const { username, email, password } = req.body;
-    console.log(req.body);
     const hashPass = await hashPassword(password);
     const newUser = new User({ username, email, password: hashPass });
     await newUser.save();
@@ -33,7 +33,7 @@ export const signup = async (
   }
 };
 
-export const signin = async (req: Request,res: Response, next: NextFunction) => {
+ export const signin = async (req: express.Request,res: express.Response): Promise<Response | any> => {
 
   try {
     
@@ -44,24 +44,27 @@ export const signin = async (req: Request,res: Response, next: NextFunction) => 
     
     
     if (!validUser) {
-        console.log(validUser)
-      return next(errorHandler(401,'ivanhush'))
-      // return res.status(401).json({error:'failed'})
+
+      
+      return res.status(401).json({error:'Invalid Credentials'})
     }
-    console.log(2);
+     console.log(2);
     
 
     const validPassword = bcrypt.compareSync(password, validUser.password);
+
     if (!validPassword){
-      // return next(errorHandler(401, "Invalid credentials"));
-      return
+      
+      return res.status(401).json({error:'Invalid Credentials'})
     } 
 
     if (!process.env.JWT_SECRET) {
-      // return next(errorHandler(501, "JWT-SECRET is not defined in env"));
-      return
+        console.error('jwt not fetched');
+        return;
+       
     }
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+
+     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
 
     //deleting pass from validUser before sending to client
     const { password:_,...userWithoutPassword } = validUser;
@@ -69,15 +72,14 @@ export const signin = async (req: Request,res: Response, next: NextFunction) => 
     const expiryDate = new Date(Date.now() + 120000);
 
     // storing token in cookies in client side
-    res
+    return res
       .cookie("access_token", token, { httpOnly: true, expires: expiryDate })
       .status(200)
       .json(userWithoutPassword);
       
   } catch (error) {
     console.log(error);
-    
-    next(errorHandler(500,'failed to sign in'));
+  
   }
 };
 
