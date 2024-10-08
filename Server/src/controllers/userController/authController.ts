@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 import { errorHandler } from "../../utility/error.ts";
+import { log } from 'node:console';
 
        
 const hashPassword = async (pass: string) => {            //*TO HASH PASSWORD
@@ -20,9 +21,15 @@ export const signup = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+):Promise<Response | any> => {
   try {
     const { username, email, password } = req.body;
+    const isExisting = await User.findOne({email});
+
+    if(isExisting){
+      return res.status(401).json({error:'email id already exist'})
+    }
+
     const hashPass = await hashPassword(password);
     const newUser = new User({ username, email, password: hashPass });
     await newUser.save();
@@ -39,22 +46,14 @@ export const signup = async (
     
     const { email, password } = req.body;
     const validUser = await User.findOne({ email }).lean();
-    console.log(validUser);
-    console.log(1);
     
-    
-    if (!validUser) {
-
-      
+    if (!validUser) {   
       return res.status(401).json({error:'Invalid Credentials'})
     }
-     console.log(2);
-    
 
     const validPassword = bcrypt.compareSync(password, validUser.password);
 
-    if (!validPassword){
-      
+    if (!validPassword){   
       return res.status(401).json({error:'Invalid Credentials'})
     } 
 

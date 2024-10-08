@@ -1,8 +1,10 @@
     import { useSelector } from "react-redux"
     import { RootState } from "../redux/store"
-    import { useEffect, useRef, useState } from "react"
+    import React, { useEffect, useRef, useState } from "react"
     import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
-    import { app } from "../firebase"
+    import { app } from "../firebase";
+    import {  ToastContainer , toast} from 'react-toastify'
+    import 'react-toastify/dist/ReactToastify.css';
 
 
     interface FormaData {
@@ -14,6 +16,8 @@
     
     
     const Profile : React.FC = () : JSX.Element => {
+
+     
 
       const fileRef  = useRef<HTMLInputElement | null>(null)
       const [image,setImage] = useState<File|undefined>(undefined)
@@ -58,8 +62,32 @@
           }
         );
       };
+
+      const updateUser = async(e: React.FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
+        alert(JSON.stringify(formData))
+        console.log(formData);
+        
+      }
+
+
+
+
+
+
       return (
         <div className="p-3 max-w-lg mx-auto ">
+
+          <ToastContainer 
+               position= "top-right"
+               autoClose= {5000}
+               hideProgressBar= {false}
+               closeOnClick= {true}
+               pauseOnHover= {true}
+               draggable= {true}
+               theme="dark"
+               />
           
             <h1 
             className="text-3xl font-semibold text-center my-7">
@@ -128,23 +156,13 @@
                   placeholder="email"
                   className="bg-slate-100 rounded-lg p-3 "
                   /> 
-
-                <p 
-                  className="ms-2 font-mono text-gray-400 "
-                  >User Passwod
-                </p>
-
-                <input 
-                  type="password"
-                  id="password"
-                  placeholder="Password"
-                  className="bg-slate-100 rounded-lg p-3 "
-                  />
+              
 
                 <button
-                    type="button"
-                    className="bg-slate-700 text-white p-3 rounded-lg uppercase
-                       hover:opacity-95 disabled:opacity-80"
+                    type="submit"
+                    className="bg-slate-700 text-white p-3 rounded-lg uppercase font-semibold
+                       hover:opacity-95 disabled:opacity-80 hover:bg-blue-500"
+                   
                     >update
 
                 </button>

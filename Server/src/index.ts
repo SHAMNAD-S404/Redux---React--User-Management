@@ -22,8 +22,8 @@ import cookieParser from 'cookie-parser';
     app.use('/api/auth',authRoute)
 
     
-    //error middleware
-    const errorHandler:ErrorRequestHandler = ((err,req,res,next)  => {
+    //Global error middleware
+    const errorHandler:ErrorRequestHandler = ((err,req:Request,res:Response,next:NextFunction)  => {
 
         const statusCode = (err as any).statusCode || 500;
         const message    = err.message || "Internal server error";
@@ -35,6 +35,8 @@ import cookieParser from 'cookie-parser';
         })
 
     })
+
+      
 
     app.use(errorHandler)
 

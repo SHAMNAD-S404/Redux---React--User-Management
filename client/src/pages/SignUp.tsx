@@ -35,9 +35,10 @@ const SignUp: React.FC = (): JSX.Element => {
 
       const data = await res.json();
       setLoading(false);
-      if (data.success === false) {
+      
+      if (data.error || data.success === false) {
         setError(true);
-        toast.error(JSON.stringify(data),{
+        toast.error(JSON.stringify(data.error || data),{
 
           position: "top-right", 
           autoClose: 5000, 
@@ -45,7 +46,6 @@ const SignUp: React.FC = (): JSX.Element => {
           closeOnClick: true, 
           pauseOnHover: true, 
           draggable: true, 
-          theme:"dark"
         });
 
         return;
