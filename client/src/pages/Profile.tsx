@@ -58,16 +58,56 @@
             getDownloadURL(uploadTask.snapshot.ref)
               .then((downloadURL) => {
                 setFormData({ ...formData, profilePicture: downloadURL });
+                console.log(downloadURL)
+                console.log('im form data',formData)
               });
           }
         );
       };
 
-      const updateUser = async(e: React.FormEvent<HTMLFormElement>) => {
+      const updateUser = async() => {
 
-        e.preventDefault();
-        alert(JSON.stringify(formData))
-        console.log(formData);
+        const username  = (document.getElementById('username')as HTMLInputElement).value.trim()
+        const email     = (document.getElementById('email') as HTMLInputElement).value.trim()
+        const userAlert = (document.getElementById('P-username')as HTMLElement)
+        const emailAlert= (document.getElementById('P-email')as HTMLElement)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const usernameRegex = /^[A-Za-z ]{4,10}$/;
+
+        if(!usernameRegex.test(username)){
+          userAlert.style.color = 'red'
+          userAlert.textContent = "Length should be 4-10.characters only allowed"
+          return ;
+        }else{
+          userAlert.textContent = ''
+        }
+
+        if(!emailRegex.test(email)){
+          emailAlert.style.color = 'red'
+          emailAlert.textContent = "Enter valid email"
+        }else{
+          emailAlert.textContent = '';
+        }
+
+
+        const res = await fetch('/api/user/update-profile',{
+          method:'PATCH',
+          headers:{'Content-Type' : 'application/json'},
+          body : JSON.stringify({
+            username : username,
+            email  : email,
+            profilePicture : formData?.profilePicture
+          })
+        })
+
+        const data = await res.json()
+
+
+
+
+
+
+        
         
       }
 
@@ -132,7 +172,7 @@
 
                 </p>
 
-                <p 
+                <p id="P-username"
                   className="ms-2 font-mono text-gray-400 "
                   >User Name
                 </p>
@@ -143,8 +183,10 @@
                   placeholder="Username"
                   className="bg-slate-100 rounded-lg p-3 "
                   />
+
                 
-                <p 
+                
+                <p id="P-email"
                   className="ms-2 font-mono text-gray-400"
                   >User Email
                 </p>
@@ -155,14 +197,15 @@
                   defaultValue={currentUser?.email}
                   placeholder="email"
                   className="bg-slate-100 rounded-lg p-3 "
+                  
                   /> 
               
 
                 <button
-                    type="submit"
+                    type="button"
                     className="bg-slate-700 text-white p-3 rounded-lg uppercase font-semibold
                        hover:opacity-95 disabled:opacity-80 hover:bg-blue-500"
-                   
+                    onClick={updateUser}
                     >update
 
                 </button>

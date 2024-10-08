@@ -1,10 +1,11 @@
 import express from 'express';
-import { test } from '../../controllers/userController/userController.ts';
+import { test, updateProfile } from '../../controllers/userController/userController.ts';
 import { verifyToken } from '../../utility/verifyUser.ts';
 
-const router = express.Router();
+const app = express.Router();
 
-router.get('/', test);
-router.post('/update/:id',);
+app.get('/', test)
+   .patch('/update-profile',updateProfile)
+    
 
-export default router;
+export default app;
