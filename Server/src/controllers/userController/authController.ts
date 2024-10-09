@@ -5,10 +5,10 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 import { errorHandler } from "../../utility/error.ts";
-import { log } from 'node:console';
+
 
        
-const hashPassword = async (pass: string) => {            //*TO HASH PASSWORD
+const hashPassword = async (pass: string) => { 
   try {
     const passwordHash = bcrypt.hashSync(pass, 10);
     return passwordHash;
@@ -17,14 +17,22 @@ const hashPassword = async (pass: string) => {            //*TO HASH PASSWORD
   }
 };
 
-export const signup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-):Promise<Response | any> => {
+export const signup = async ( req: Request,res: Response, next: NextFunction):Promise<Response | any> => {
+
   try {
     const { username, email, password } = req.body;
-    const isExisting = await User.findOne({email});
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const usernameRegex = /^[A-Za-z ]{4,10}$/;
+
+    if(!usernameRegex.test(username)){
+      return res.status(400).json({error:"Enter a valid name"})
+    }
+
+    if(!emailRegex.test(email)){
+      return res.status(400).json({error:"Enter a valid email"})
+    }
+
+    const isExisting = await User.findOne({email});    
 
     if(isExisting){
       return res.status(401).json({error:'email id already exist'})
@@ -59,22 +67,21 @@ export const signup = async (
 
     if (!process.env.JWT_SECRET) {
         console.error('jwt not fetched');
-        return;
-       
+        return;  
     }
 
-     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET,{expiresIn:'5m'});
 
     //deleting pass from validUser before sending to client
-    const { password:_,...userWithoutPassword } = validUser;
+    // const { password:_,...userWithoutPassword } = validUser;
 
-    const expiryDate = new Date(Date.now() + 120000);
+    const expiryDate = new Date(Date.now() + 300000); //for 5min
 
     // storing token in cookies in client side
     return res
-      .cookie("access_token", token, { httpOnly: true, expires: expiryDate })
+      .cookie("access_token", token, { httpOnly: true, expires: expiryDate , secure:true })
       .status(200)
-      .json(userWithoutPassword);
+      .json({user:{...validUser,password:null}});
       
   } catch (error) {
     console.log(error);
@@ -99,7 +106,7 @@ export const google = async (
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
       const { password:_,...rest } = user;
-      const expiryDate = new Date(Date.now() + 120000);
+      const expiryDate = new Date(Date.now() + 300000);
 
       res
         .cookie("access_token", token, {
@@ -131,7 +138,7 @@ export const google = async (
 
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
       const { password:_,...rest } = newUser;
-      const expiryDate = new Date(Date.now() + 120000);
+      const expiryDate = new Date(Date.now() + 300000);
 
       res
         .cookie("access_token", token, {

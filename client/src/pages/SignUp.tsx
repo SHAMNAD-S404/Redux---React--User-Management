@@ -41,7 +41,7 @@ const SignUp: React.FC = (): JSX.Element => {
         toast.error(JSON.stringify(data.error || data),{
 
           position: "top-right", 
-          autoClose: 5000, 
+          autoClose: 4000, 
           hideProgressBar: false, 
           closeOnClick: true, 
           pauseOnHover: true, 
@@ -51,16 +51,18 @@ const SignUp: React.FC = (): JSX.Element => {
         return;
       }
 
-      toast.success(JSON.stringify(data),{
+      toast.success(JSON.stringify(data.success),{
         position: "top-right", 
-              autoClose: 5000, 
+              autoClose: 1000, 
               hideProgressBar: false, 
               closeOnClick: true, 
               pauseOnHover: true, 
               draggable: true, 
               theme:"dark",
+              onClose:()=>{
+                  navigate("/sign-in");
+              }
       })
-      navigate("/sign-in");
     } catch (error) {
       setLoading(false);
       setError(true);
@@ -131,7 +133,7 @@ const SignUp: React.FC = (): JSX.Element => {
         </div>
       </div>
 
-      <ToastContainer/>
+      <ToastContainer />
 
       {/* Blue section */}
       <div
@@ -139,7 +141,7 @@ const SignUp: React.FC = (): JSX.Element => {
         style={{ backgroundImage: `url(${bgImg})` }}
       >
         <div className="flex items-center justify-center h-full w-full bg-black bg-opacity-40">
-          <h1 className="text-white font-semibold text-3xl shadow-2xl text-center">
+          <h1 className="text-white font-semibold text-3xl shadow-2xl text-center ">
             Welcome Gamers <br /> to <br /> Buy Games
           </h1>
         </div>

@@ -102,12 +102,11 @@
 
         const data = await res.json()
 
-
-
-
-
-
-        
+        if (data.success) {
+          toast.success(data.success)
+        }else{
+          toast.error(data.error)
+        }
         
       }
 
@@ -121,7 +120,7 @@
 
           <ToastContainer 
                position= "top-right"
-               autoClose= {5000}
+               autoClose= {3000}
                hideProgressBar= {false}
                closeOnClick= {true}
                pauseOnHover= {true}

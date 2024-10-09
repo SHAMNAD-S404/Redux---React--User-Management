@@ -1,19 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import bgImg from "../assets/man.jpg";
 import { useState } from "react";
-import {
-  signInStart,
-  signInFailure,
-  signInSuccess,
-} from "../redux/user/userSlice";
-
+import { signInStart,signInFailure,signInSuccess } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import OAuth from "../component/OAuth";
 import { ToastContainer, toast } from "react-toastify";
+import OAuth from "../component/OAuth";
 import "react-toastify/dist/ReactToastify.css";
+import bgImg from "../assets/man.jpg";
 
 const SignIn: React.FC = (): JSX.Element => {
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

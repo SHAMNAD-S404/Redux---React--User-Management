@@ -1,3 +1,5 @@
+
+
 {
   "compilerOptions": {
     "module": "ESNext", // or "ES6", ensures ESM output
@@ -10,8 +12,8 @@
     "rootDir": "./src"  ,            // Skip type checking for libraries
     "forceConsistentCasingInFileNames": true,
     "allowImportingTsExtensions": true,
-  
     "noEmit": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     
   },
   "include": ["src/**/*"],                      // Include all TS files inside src
