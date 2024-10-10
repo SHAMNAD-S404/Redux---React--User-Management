@@ -76,10 +76,7 @@ export const signin = async (req: express.Request,
 
     //deleting pass from validUser before sending to client
      const { password:_,...userWithoutPassword } = validUser;
-
-     console.log('from bakend sigin in function res data bf sedning',userWithoutPassword);
      
-
     const expiryDate = new Date(Date.now() + 3600000); //for 5min
 
     // storing token in cookies in client side
@@ -186,9 +183,6 @@ export const getUser = async (req:Request,res:Response,next:NextFunction) :Promi
     if (!getData) {
       return res.status(401).json({error:"Un authorized"})
     }else{
-      
-
-      console.log('from bakedn getUser,',getData);
       
       return res.status(200).json({user:getData })
     }

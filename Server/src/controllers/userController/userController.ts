@@ -53,5 +53,25 @@
   }
 
 
+  export const deleteAccount = async (req:Request,res:Response,next:NextFunction) : Promise<Response|any> => {
+
+    try {
+
+      const userID = (req as any).user;
+      if(!userID) return res.status(401).json({error:"un authorized"})
+      const deleteUser = await User.findByIdAndDelete(userID).select('_id')
+
+      if (deleteUser) {
+        return res.clearCookie('access_token').status(200).json({success:"Deleted account successfully "})
+      }else{
+        return res.status(400).json({error:"operation failed"})
+      }
+      
+    } catch (error) {
+      console.log(error);  
+    }
+  }
+
+
 
 

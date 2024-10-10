@@ -11,6 +11,7 @@
         currentUser : User | null;
         loading     : boolean,
         error       : boolean | string,
+        isActive    : boolean ,
        
     }
 
@@ -18,6 +19,7 @@
         currentUser : null,
         loading     : false,
         error       : false,
+        isActive    : false
        
     };
 
@@ -34,14 +36,17 @@
                
                 state.loading = false;
                 state.error = false;
+                state.isActive = true;
                 
             },
             signInFailure:(state,action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.isActive = false;
             },
             singOut:(state) => {
-                state.currentUser = null;      
+                state.currentUser = null;
+                state.isActive = false;      
             }
         }
     });
