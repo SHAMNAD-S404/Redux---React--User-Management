@@ -113,7 +113,7 @@ export const google = async (req: Request, res: Response, next: NextFunction) =>
           expires: expiryDate,
         })
         .status(200)
-        .json(rest);
+        .json({user:rest});
     } else {
       //if the user have no account
       const generatedPassword =
@@ -128,6 +128,9 @@ export const google = async (req: Request, res: Response, next: NextFunction) =>
         password: hashedPassword,
         profilePicture: photo,
       });
+
+      console.log(photo);
+      
 
       await newUser.save();
 
