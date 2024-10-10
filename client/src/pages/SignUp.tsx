@@ -51,7 +51,7 @@ const SignUp: React.FC = (): JSX.Element => {
         return;
       }
 
-      toast.success(JSON.stringify(data.success),{
+      toast.success(JSON.stringify(data.message),{
         position: "top-right", 
               autoClose: 1000, 
               hideProgressBar: false, 
