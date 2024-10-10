@@ -60,7 +60,7 @@ const SignIn: React.FC = (): JSX.Element => {
         hideProgressBar: false,
         onClose:()=>{
 
-           dispatch(signInSuccess(data));
+           dispatch(signInSuccess(data.user));
             navigate("/");
         }
       })

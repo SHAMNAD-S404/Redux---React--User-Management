@@ -7,13 +7,15 @@ import About   from './pages/About'
 import Header  from './component/Header'
 import Profile from './pages/Profile'
 import PrivateRoute from './component/PrivateRoute'
+import AuthWrapper from './component/AuthWrapper'
   
-  const App : React.FC = () : JSX.Element => {
+  const App : React.FC = () : JSX.Element => {     
+
     return (
 
       <BrowserRouter>
-
-        {/* HEADER */}
+       <AuthWrapper>
+        {/* Header component */}
         <Header/>
 
         <Routes>
@@ -27,7 +29,8 @@ import PrivateRoute from './component/PrivateRoute'
           <Route path='/profile' element={<Profile/>}  />
           </Route>
 
-        </Routes>   
+        </Routes>
+        </AuthWrapper>   
       </BrowserRouter>
       
 

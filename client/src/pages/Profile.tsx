@@ -93,6 +93,7 @@
         const res = await fetch('/api/user/update-profile',{
           method:'PATCH',
           headers:{'Content-Type' : 'application/json'},
+          credentials : 'include',
           body : JSON.stringify({
             username : username,
             email  : email,
@@ -109,8 +110,6 @@
         }
         
       }
-
-
 
 
 
