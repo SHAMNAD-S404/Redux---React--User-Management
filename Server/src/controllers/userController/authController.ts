@@ -55,7 +55,7 @@ export const signin = async (req: express.Request,
   try {
 
     const { email, password } = req.body;
-    const validUser = await User.findOne({ email }).lean();
+    const validUser = await User.findOne({ email }).lean().select('_id username email profilePicture password')
 
     if (!validUser) {
       return res.status(401).json({ error: 'Invalid Credentials' })
@@ -75,7 +75,10 @@ export const signin = async (req: express.Request,
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     //deleting pass from validUser before sending to client
-    // const { password:_,...userWithoutPassword } = validUser;
+     const { password:_,...userWithoutPassword } = validUser;
+
+     console.log('from bakend sigin in function res data bf sedning',userWithoutPassword);
+     
 
     const expiryDate = new Date(Date.now() + 3600000); //for 5min
 
@@ -83,7 +86,7 @@ export const signin = async (req: express.Request,
     return res
       .cookie("access_token", token, { httpOnly: true, expires: expiryDate, secure: true })
       .status(200)
-      .json({ user: { ...validUser, password: null } });
+      .json({ user: userWithoutPassword });
 
   } catch (error) {
     console.log(error);
@@ -145,7 +148,7 @@ export const google = async (req: Request, res: Response, next: NextFunction) =>
           expires: expiryDate,
         })
         .status(200)
-        .json(rest);
+        .json({user:rest});
     }
   } catch (error) {
     console.error(error);
@@ -160,7 +163,7 @@ export const singout = async(req:Request , res:Response , next:NextFunction) : P
 
   try {
 
-    res.clearCookie("access_token");
+    res.clearCookie("access_token").status(200).json({success:'successfully loged out'})
     
   } catch (error) {
     console.error(error);
@@ -173,18 +176,21 @@ export const singout = async(req:Request , res:Response , next:NextFunction) : P
 export const getUser = async (req:Request,res:Response,next:NextFunction) :Promise<Response | any> => {
 
   try {
-
-    console.log('inside getUser');
-
     const userID = (req as any).user;
 
     if(!userID) return res.status(401).json({error:'userId not fetched '})
     
-    const getData = await User.findById(userID);
+    const getData = await User.findById(userID).select('_id username email profilePicture')
+    
+
     if (!getData) {
       return res.status(401).json({error:"Un authorized"})
     }else{
-      return res.status(200).json({user:{...getData,password:null} })
+      
+
+      console.log('from bakedn getUser,',getData);
+      
+      return res.status(200).json({user:getData })
     }
     
   } catch (error) {

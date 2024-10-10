@@ -1,10 +1,13 @@
-    import { useSelector } from "react-redux"
+    import { useDispatch, useSelector } from "react-redux"
     import { RootState } from "../redux/store"
     import React, { useEffect, useRef, useState } from "react"
     import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage"
     import { app } from "../firebase";
     import {  ToastContainer , toast} from 'react-toastify'
     import 'react-toastify/dist/ReactToastify.css';
+    import axios from "axios";
+    import { singOut } from "../redux/user/userSlice";
+    import { useNavigate } from "react-router-dom";
 
 
     interface FormaData {
@@ -25,7 +28,8 @@
       const [imageError , setImageError ] = useState<string|boolean>(false)
       const [ formData , setFormData] = useState<FormaData>({})
      
-       
+      const dispatch = useDispatch()
+      const navigate = useNavigate()
       const {currentUser} = useSelector((state:RootState) => state.user)
 
       useEffect(()=> {
@@ -58,8 +62,6 @@
             getDownloadURL(uploadTask.snapshot.ref)
               .then((downloadURL) => {
                 setFormData({ ...formData, profilePicture: downloadURL });
-                console.log(downloadURL)
-                console.log('im form data',formData)
               });
           }
         );
@@ -109,6 +111,24 @@
           toast.error(data.error)
         }
         
+      }
+
+      const signOutHandle = async ()=>{
+
+        try {
+          const response = await axios.get('/api/auth/sign-out',{
+            withCredentials:true,
+          })
+
+          if (response.status === 200) {
+            dispatch(singOut())
+            navigate('/sign-in')
+          }
+             
+        } catch (error) {
+          console.log(error);
+          
+        }
       }
 
 
@@ -218,6 +238,7 @@
 
                   <span
                    className="text-white cursor-pointer bg-blue-500 p-1.5 rounded-lg font-semibold hover:bg-green-600 "
+                   onClick={signOutHandle}
                    >Sign out
 
                   </span>

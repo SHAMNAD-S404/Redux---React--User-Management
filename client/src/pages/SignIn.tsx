@@ -53,7 +53,9 @@ const SignIn: React.FC = (): JSX.Element => {
         dispatch(signInFailure(data.error));
         return;
       }
-
+      
+      console.log('from signIn.tsx success user data',data.user);
+      
       toast.success("Welcome" ,{
         position: "top-right",
         autoClose: 500,

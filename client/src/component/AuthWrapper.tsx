@@ -17,18 +17,14 @@ import { signInSuccess, singOut } from "../redux/user/userSlice";
 
         const fetchUser = async () => {
             try {
-                const response = await axios.get('',{
+                const response = await axios.get('/api/auth/me',{
                     withCredentials : true,
-                })
-
-                console.log('eda sucess ay');
-                console.log('output data ' , response);
-                
+                })        
                             
                 dispatch(signInSuccess(response.data.user));
             } catch (error) {
-                console.log(error);
                 
+                console.log(error);           
                 dispatch(singOut());
 
                 if (window.location.pathname !== '/sign-in' && window.location.pathname !== '/sign-up') {
