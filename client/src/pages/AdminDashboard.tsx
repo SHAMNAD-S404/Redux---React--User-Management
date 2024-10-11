@@ -9,11 +9,20 @@ const AdminDashboard: React.FC = () => {
   const [updatedUsername, setUpdatedUsername] = useState('');
   const [updatedEmail, setUpdatedEmail] = useState('');
 
+
+  console.log(users);
+  
+
   // Fetch users from the backend when the component mounts
   useEffect(() => {
     const fetchUsers = async () => {
+
+
+
       try {
-        const response = await axios.get('/api/admin/getUser'); // Update with your actual endpoint
+
+        const response = await axios.get('/api/admin/getUser'); 
+
         setUsers(response.data.userData); 
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -106,6 +115,15 @@ const AdminDashboard: React.FC = () => {
 
       {/* Users Table */}
       <div className="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+
+        <button 
+
+
+        
+        className='text-white bg-red-600 '>
+            A-Z
+        </button>
+
         <h2 className="text-2xl font-semibold mb-4 text-center">Users List</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-gray-700 rounded-lg">
@@ -117,6 +135,8 @@ const AdminDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
+
+
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
                   <tr key={user._id} className="hover:bg-gray-600 transition-colors">
@@ -145,6 +165,9 @@ const AdminDashboard: React.FC = () => {
                   </td>
                 </tr>
               )}
+
+
+
             </tbody>
           </table>
         </div>

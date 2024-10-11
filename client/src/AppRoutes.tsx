@@ -10,6 +10,7 @@ import AuthWrapper from './component/AuthWrapper';
 import AdminSignIn from './pages/AdminSignIn';
 import AdminHome from './pages/AdminHome'
 import AdminDashboard from './pages/AdminDashboard';
+import AdminAuthWrapper from './component/AdminAuthWrapper'
 
 const AppRoutes: React.FC = (): JSX.Element => {
   const location = useLocation(); 
@@ -20,7 +21,8 @@ const AppRoutes: React.FC = (): JSX.Element => {
   return (
     <>
       {/*  Admin Routes */}
-    
+      {isAdminRoute && (
+        <AdminAuthWrapper>
       <Routes>
         
         <Route path="/admin/login" element={<AdminSignIn />} />
@@ -28,6 +30,10 @@ const AppRoutes: React.FC = (): JSX.Element => {
         <Route path='/admin/dashboard' element={<AdminDashboard/>} /> 
 
       </Routes>
+
+        </AdminAuthWrapper>
+      )}
+     
 
       {/* User Routes with AuthWrapper */}
       {!isAdminRoute && (

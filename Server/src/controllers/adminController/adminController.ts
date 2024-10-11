@@ -2,15 +2,11 @@
  import  Jwt  from "jsonwebtoken";
  import { NextFunction, Request,Response } from "express";
  import User from "../../model/user.ts";
-import { error } from "console";
 
  export const adminLogin = async (req:Request,res:Response) : Promise<Response | any> => {
     try {
-    console.log('im in backend');
     
         const {adminId , password} = req.body;
-        console.log(req.body);
-        
 
         if(!process.env.ADMIN_ID || !process.env.ADMIN_PASS || !process.env.JWT_SECRET_ADMIN ){
             return res.status(500).json({error:'Environment variable not fetched'})
@@ -124,4 +120,18 @@ import { error } from "console";
     }
   }
 
+  export const getAdmin = async (req:Request,res:Response,next:NextFunction) :Promise<Response | any> => {
+
+    try {
+      const userID = (req as any).user;
   
+      if(!userID) return res.status(401).json({error:'userId not fetched '})
+
+          return res.status(200).json({user:userID })
+      
+      
+    } catch (error) {
+      console.log('fetching getuser error',error); 
+    }
+  
+  }
