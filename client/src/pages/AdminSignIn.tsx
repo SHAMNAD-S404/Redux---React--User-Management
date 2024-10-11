@@ -5,22 +5,29 @@ import bgImg from "../assets/man.jpg";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {adminSingInSuccess , adminSignOut} from '../redux/user/userSlice'
 
 const AdminSignIn: React.FC = (): JSX.Element => {
 
   const [adminId, setAdminId] = useState('');
   const [password , setPassword] = useState('');
   const navigate  = useNavigate();
+  const dispatch  = useDispatch();
 
-  const handleAdminLogin = async () => {
+  const handleAdminLogin = async (event:any) => {
+
+    event.preventDefault()
     try {
+      alert('clicked')
 
       const response =  await axios.post('/api/admin/login',
                 { adminId,password },
                 { withCredentials:true });
-      
-      if(response.data){
-        navigate('/admin/home');
+
+      if(response.data.success){
+         dispatch(adminSingInSuccess(response.data.adminId))
+         navigate('/admin/home');
       }
 
     } catch (error) {
@@ -62,12 +69,11 @@ const AdminSignIn: React.FC = (): JSX.Element => {
               onChange={(e)=> setPassword(e.target.value)}
             />
             <button
-            // disabled={loading}
+               type="submit"
               className="text-white bg-gradient-to-r from-purple-700 to-red-500 p-2 w-24 h-10 rounded-full text-md font-semibold
            hover:text-black hover:bg-gradient-to-r hover:from-green-500 hover:to-yellow-400 transition-all duration-300"
-             type="submit"
             >
-              {/* {loading ? "Loading..." : "Sign In"} */} 
+           
               Sign in
             </button>
 

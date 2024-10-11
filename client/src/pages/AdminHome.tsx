@@ -1,7 +1,33 @@
+import axios from 'axios';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { adminSignOut } from '../redux/user/userSlice';
 
 const Home: React.FC = () => {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleSignOut = async () => {
+        try {
+            const response = await axios.get('/api/admin/sign-out',{
+                withCredentials:true
+            })
+            
+            if(response.data.success){
+                dispatch(adminSignOut())
+                navigate('/admin/login')
+            }
+
+        } catch (error) {
+            console.error(error);
+            
+        }
+    }
+
+
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 flex-col">
       <div className="text-center">
@@ -15,9 +41,12 @@ const Home: React.FC = () => {
       </div>
       
       <div className= "">
-      <button className="mt-4 w-52 px-6 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-green-600">
+      <button
+       type='button'
+       onClick={handleSignOut}
+       className="mt-4 w-52 px-6 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-green-600">
             Sign out 
-          </button>
+      </button>
       </div>
     </div>
   );

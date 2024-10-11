@@ -1,6 +1,6 @@
  
  import express ,{Response,Request,NextFunction} from 'express'
- import { adminLogin, } from '../../controllers/adminController/adminController.ts'
+ import { adminLogin,adminLogout } from '../../controllers/adminController/adminController.ts'
  import { verifyAdminToken } from '../../middleware/adminAuth.ts'
 
  const app = express.Router();
@@ -9,6 +9,7 @@
     .get('/dashboard',verifyAdminToken,(req:Request,res:Response,next:NextFunction) => {
                 res.status(200).json({success:"Welcome to admin dashboard"})
     })
+    .get('/sign-out',adminLogout)
 
 
  export default app;

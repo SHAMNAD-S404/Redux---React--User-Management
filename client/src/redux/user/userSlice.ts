@@ -1,5 +1,5 @@
 
-    import { createSlice } from "@reduxjs/toolkit";
+    import { createSlice , PayloadAction } from "@reduxjs/toolkit";
 
     interface User{
         profilePicture? : string,
@@ -56,9 +56,9 @@
                 state.currentUser = null;
                 state.isActive = false;      
             },
-            adminSingInSuccess : (state , action) => {
+            adminSingInSuccess : (state , action: PayloadAction<string|any>) => {
                 state.admin = {
-                    adminId : action.payload.adminId,
+                    adminId : action.payload,
                     adminActive : true
                 };
                 state.loading = false;
@@ -71,5 +71,5 @@
     });
 
 
-    export const { signInStart, signInSuccess , signInFailure, singOut} = userSlice.actions;
+    export const { signInStart, signInSuccess , signInFailure, singOut ,adminSignOut,adminSingInSuccess} = userSlice.actions;
     export default userSlice.reducer
