@@ -11,6 +11,7 @@
     export const verifyAdminToken = async(req:Request, res:Response, next:NextFunction) : Promise<Response | any> => {
 
         const token = req.cookies.admin_token;
+        
 
         if(!token) return res.status(401).json({error:"Unazuthorized access"})
 
@@ -28,7 +29,7 @@
             }
 
             (req as any).user = decoded.id;
-            
+            next()
 
         } catch (error) {
             console.error(error);

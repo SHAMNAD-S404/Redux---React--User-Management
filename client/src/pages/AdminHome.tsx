@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { adminSignOut } from '../redux/user/userSlice';
 
@@ -26,17 +26,36 @@ const Home: React.FC = () => {
         }
     }
 
+    const gotoDashboard = async ()=>{
+
+        try {          
+            const response = await axios.get('/api/admin/dashboard',{
+                withCredentials:true,
+            })
+            
+            if (response.status === 200) {              
+                navigate('/admin/dashboard')
+            }    
+
+        } catch (error) {
+            console.error(error);         
+        }
+    }
+
 
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 flex-col">
       <div className="text-center">
         <h1 className="text-3xl font-bold mb-4">Welcome Admin</h1>
-        <Link to="/admin/dashboard">
-          <button className="mt-4 px-6 w-52 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-700">
+  
+          <button
+            type='button'
+            onClick={gotoDashboard}
+           className="mt-4 px-6 w-52 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-700">
             Go to Dashboard
           </button>
-        </Link>
+     
       
       </div>
       

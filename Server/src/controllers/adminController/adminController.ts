@@ -1,6 +1,8 @@
  
  import  Jwt  from "jsonwebtoken";
  import { NextFunction, Request,Response } from "express";
+ import User from "../../model/user.ts";
+import { error } from "console";
 
  export const adminLogin = async (req:Request,res:Response) : Promise<Response | any> => {
     try {
@@ -43,4 +45,81 @@
                 console.log(error);
                 
             }
+  }
+
+  export const getData = async (req:Request , res:Response , next:NextFunction) : Promise<Response | any> => {
+
+    try {
+        
+         return res.status(200).json({success:"validation success"})
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+  }
+
+  export const getUser = async (req:Request , res:Response , next:NextFunction) : Promise<Response | any> => {
+
+    try {
+        const userData = await User.find().select("_id username email")
+        if (userData) {
+            return res.status(200).json({success:"data fetched successfully", userData})
+        }else{
+            return res.status(500).json({error:"data fetching failed"})
+        }
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+  }
+
+  export const deleteUser = async (req:Request , res:Response , next:NextFunction) : Promise<Response | any>  => {
+    try {
+        
+        const deleteID = req.params.id;
+        const deleteDoc = await User.findByIdAndDelete(deleteID);
+
+        if(deleteDoc){
+            return res.status(200).json({success:"success"})
+        }else{
+            return res.status(500).json({error:"failed"})
+        }
+
+    } catch (error) {
+        console.error(error);
+        
+    }
+  }
+
+  export const updateUser = async (req:Request , res:Response , next:NextFunction) : Promise<Response | any>  => {
+    
+    try {
+        
+        const updateID = req.params.id;
+        const {username,email} = req.body;
+        
+        const verifyUser = await User.findById(updateID).select("_id")
+
+        if (verifyUser) {
+
+            const update = await User.findByIdAndUpdate(updateID,{username,email},{new:true})
+
+            if (update) {
+                return res.status(200).json({success:"updated successfully"})
+            }else{
+                return res.status(400).json({error:"updated failed"})
+            }
+            
+        }else{
+            return res.status(400).json({error:"user not found"})
+        }
+        
+        
+
+    } catch (error) {
+        console.error(error);
+        
+    }
   }

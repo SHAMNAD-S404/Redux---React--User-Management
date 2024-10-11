@@ -1,12 +1,12 @@
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import bgImg from "../assets/man.jpg";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import {adminSingInSuccess , adminSignOut} from '../redux/user/userSlice'
+import {adminSingInSuccess } from '../redux/user/userSlice'
 
 const AdminSignIn: React.FC = (): JSX.Element => {
 
@@ -19,8 +19,6 @@ const AdminSignIn: React.FC = (): JSX.Element => {
 
     event.preventDefault()
     try {
-      alert('clicked')
-
       const response =  await axios.post('/api/admin/login',
                 { adminId,password },
                 { withCredentials:true });

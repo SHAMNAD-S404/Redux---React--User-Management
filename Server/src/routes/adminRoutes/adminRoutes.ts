@@ -1,15 +1,16 @@
  
  import express ,{Response,Request,NextFunction} from 'express'
- import { adminLogin,adminLogout } from '../../controllers/adminController/adminController.ts'
+ import { adminLogin,adminLogout,getData ,getUser ,deleteUser,updateUser } from '../../controllers/adminController/adminController.ts'
  import { verifyAdminToken } from '../../middleware/adminAuth.ts'
 
  const app = express.Router();
 
  app.post('/login',adminLogin)
-    .get('/dashboard',verifyAdminToken,(req:Request,res:Response,next:NextFunction) => {
-                res.status(200).json({success:"Welcome to admin dashboard"})
-    })
+    .get('/dashboard',verifyAdminToken,getData)
     .get('/sign-out',adminLogout)
+    .get('/getUser',verifyAdminToken,getUser)
+    .delete('/delete-user/:id',verifyAdminToken,deleteUser)
+    .patch('/update-user/:id',verifyAdminToken,updateUser)
 
 
  export default app;

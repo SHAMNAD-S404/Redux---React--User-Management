@@ -1,32 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const AdminDashboard: React.FC = () => {
-  // Sample data for users
-  const users = [
-    { id: 1, name: 'John Doe', email: 'johndoe@example.com' },
-    { id: 2, name: 'Jane Smith', email: 'janesmith@example.com' },
-    { id: 3, name: 'Alice Johnson', email: 'alicejohnson@example.com' },
-  ];
-
-  // State for search input and selected user for editing
+  const [users, setUsers] = useState<{ _id: string; username: string; email: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<{ id: number; name: string; email: string } | null>(null);
-  const [updatedName, setUpdatedName] = useState('');
+  const [selectedUser, setSelectedUser] = useState<{ _id: string; username: string; email: string } | null>(null);
+  const [updatedUsername, setUpdatedUsername] = useState('');
   const [updatedEmail, setUpdatedEmail] = useState('');
+
+  // Fetch users from the backend when the component mounts
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('/api/admin/getUser'); // Update with your actual endpoint
+        setUsers(response.data.userData); 
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // Filter users based on the search term
   const filteredUsers = users.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Open modal with selected user info
-  const handleEditClick = (user: { id: number; name: string; email: string }) => {
+  const handleEditClick = (user: { _id: string; username: string; email: string }) => {
     setSelectedUser(user);
-    setUpdatedName(user.name);
+    setUpdatedUsername(user.username);
     setUpdatedEmail(user.email);
     setIsModalOpen(true);
   };
@@ -41,19 +48,40 @@ const AdminDashboard: React.FC = () => {
   const handleUpdateUser = async () => {
     if (selectedUser) {
       try {
-        // Send axios request to backend to update user
-        const response = await axios.put(`/api/users/${selectedUser.id}`, {
-          name: updatedName,
+        
+        const response = await axios.patch(`/api/admin/update-user/${selectedUser._id}`, {
+          username: updatedUsername,
           email: updatedEmail,
         });
 
-        // If successful, close modal
         if (response.status === 200) {
-          console.log('User updated successfully', response.data);
+          setUsers((prevUsers) =>
+            prevUsers.map((user) =>
+              user._id === selectedUser._id ? { ...user, username: updatedUsername, email: updatedEmail } : user
+            )
+          );
           handleCloseModal(); // Close modal after success
         }
       } catch (error) {
         console.error('Error updating user:', error);
+      }
+    }
+  };
+
+  // Handle delete user
+  const handleDeleteUser = async (userId: string) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        
+        const response = await axios.delete(`/api/admin/delete-user/${userId}`);
+
+        if (response.status === 200) {
+          // Refresh users after deletion
+          const updatedUsers = users.filter(user => user._id !== userId);
+          setUsers(updatedUsers);
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
       }
     }
   };
@@ -83,7 +111,7 @@ const AdminDashboard: React.FC = () => {
           <table className="min-w-full bg-gray-700 rounded-lg">
             <thead>
               <tr>
-                <th className="py-3 px-6 text-left text-gray-300">Name</th>
+                <th className="py-3 px-6 text-left text-gray-300">Username</th>
                 <th className="py-3 px-6 text-left text-gray-300">Email</th>
                 <th className="py-3 px-6 text-center text-gray-300">Actions</th>
               </tr>
@@ -91,8 +119,8 @@ const AdminDashboard: React.FC = () => {
             <tbody>
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-600 transition-colors">
-                    <td className="py-3 px-6 border-b border-gray-600">{user.name}</td>
+                  <tr key={user._id} className="hover:bg-gray-600 transition-colors">
+                    <td className="py-3 px-6 border-b border-gray-600">{user.username}</td>
                     <td className="py-3 px-6 border-b border-gray-600">{user.email}</td>
                     <td className="py-3 px-6 border-b border-gray-600 text-center">
                       <button
@@ -101,7 +129,10 @@ const AdminDashboard: React.FC = () => {
                       >
                         Edit
                       </button>
-                      <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                      <button
+                        onClick={() => handleDeleteUser(user._id)} // Call delete function with user _id
+                        className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                      >
                         Delete
                       </button>
                     </td>
@@ -124,11 +155,11 @@ const AdminDashboard: React.FC = () => {
         <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
             <h3 className="text-xl font-semibold mb-4">Edit User</h3>
-            <label className="block mb-2 text-gray-300">Name</label>
+            <label className="block mb-2 text-gray-300">Username</label>
             <input
               type="text"
-              value={updatedName}
-              onChange={(e) => setUpdatedName(e.target.value)}
+              value={updatedUsername}
+              onChange={(e) => setUpdatedUsername(e.target.value)}
               className="w-full bg-gray-700 text-gray-300 px-4 py-2 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <label className="block mb-2 text-gray-300">Email</label>
