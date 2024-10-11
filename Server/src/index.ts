@@ -6,6 +6,7 @@ dotenv.config();
 import connectDB from './utility/db.ts';
 import userRoute from './routes/userRoutes/userRoute.ts' ;
 import authRoute from './routes/userRoutes/authRoute.ts' ;
+import adminRoute from './routes/adminRoutes/adminRoutes.ts';
 import cookieParser from 'cookie-parser';
 
     const app = express();
@@ -20,6 +21,7 @@ import cookieParser from 'cookie-parser';
     //user route handling
     app.use('/api/user',userRoute)
     app.use('/api/auth',authRoute)
+    app.use('/api/admin',adminRoute)
 
     
     //Global error middleware
