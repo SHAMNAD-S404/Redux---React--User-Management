@@ -94,7 +94,7 @@ import { error } from "console";
   }
 
   export const updateUser = async (req:Request , res:Response , next:NextFunction) : Promise<Response | any>  => {
-    
+
     try {
         
         const updateID = req.params.id;
@@ -123,3 +123,5 @@ import { error } from "console";
         
     }
   }
+
+  
