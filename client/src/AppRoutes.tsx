@@ -8,19 +8,25 @@ import Profile from './pages/Profile';
 import PrivateRoute from './component/PrivateRoute';
 import AuthWrapper from './component/AuthWrapper';
 import AdminSignIn from './pages/AdminSignIn';
+import AdminHome from './pages/AdminHome'
+import AdminDashboard from './pages/AdminDashboard';
 
 const AppRoutes: React.FC = (): JSX.Element => {
-  const location = useLocation(); // Now inside the BrowserRouter
+  const location = useLocation(); 
 
   // Check if the current path is related to admin routes
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
     <>
-      {/* Separate Admin Routes */}
+      {/*  Admin Routes */}
+    
       <Routes>
+        
         <Route path="/admin/login" element={<AdminSignIn />} />
-        {/* Add more admin routes here */}
+        <Route path='/admin/home' element={<AdminHome/>} />
+        <Route path='/admin/dashboard' element={<AdminDashboard/>} /> 
+
       </Routes>
 
       {/* User Routes with AuthWrapper */}

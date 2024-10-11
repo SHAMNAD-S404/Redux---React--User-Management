@@ -20,7 +20,7 @@ const AdminSignIn: React.FC = (): JSX.Element => {
                 { withCredentials:true });
       
       if(response.data){
-        navigate('/admin/dashboard');
+        navigate('/admin/home');
       }
 
     } catch (error) {
