@@ -3,25 +3,25 @@
 import express,{ Request,Response , NextFunction, ErrorRequestHandler } from 'express'
 import dotenv from 'dotenv'
 dotenv.config();
-import connectDB from './utility/db.ts';
-import userRoute from './routes/userRoutes/userRoute.ts' ;
-import authRoute from './routes/userRoutes/authRoute.ts' ;
-import adminRoute from './routes/adminRoutes/adminRoutes.ts';
+import connectDB    from './utility/db.ts';
+import userRoute    from './routes/userRoutes/userRoute.ts' ;
+import authRoute    from './routes/userRoutes/authRoute.ts' ;
+import adminRoute   from './routes/adminRoutes/adminRoutes.ts';
 import cookieParser from 'cookie-parser';
 
     const app = express();
-    const PORT = process.env.PORT  || 5005
+    const PORT = process.env.PORT  || 5005;
 
     //connect to mongodb
     connectDB();
 
-    app.use(express.json())
-    app.use(cookieParser())
+    app.use (express.json())
+    app.use (cookieParser())
 
     //user route handling
-    app.use('/api/user',userRoute)
-    app.use('/api/auth',authRoute)
-    app.use('/api/admin',adminRoute)
+    app.use ('/api/user',userRoute)
+    app.use ('/api/auth',authRoute)
+    app.use ('/api/admin',adminRoute)
 
     
     //Global error middleware
@@ -36,7 +36,7 @@ import cookieParser from 'cookie-parser';
             statusCode
         })
 
-    })
+    });
 
       
 
